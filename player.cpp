@@ -10,7 +10,10 @@
  * within 30 seconds.
  */
 
+<<<<<<< HEAD
 int strengths [8][8] = {0};
+=======
+>>>>>>> 0263aa748c1c752cd2293d5fad860a8e812d0eb8
 
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
@@ -102,8 +105,29 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
      * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+    return doBestCurrentMove(opponentsMove);
+    // return doSimpleMove(opponentsMove, msLeft);
+}
 
-    return doSimpleMove(opponentsMove, msLeft);
+// determines the best move by just determining how many spaces each move captures
+Move* Player::doBestCurrentMove(Move* opponentsMove)
+{
+    board->doMove(opponentsMove, opponentSide);
+    vector<Move*> currMoves = board->getPossibleMoves(playerSide);
+    // cerr << board->hasMoves(playerSide) << "\n";
+    // cerr << "got current moves \n" << currMoves.size();
+    int maxIndex = 0, max = 0;
+    for(int i = 0; i < currMoves.size(); i++)
+    {
+        // cerr << "calcing spaces \n";
+        if(max >= board->calcCapturedSpaces(currMoves[i], playerSide))
+        {
+            maxIndex = i;
+        }
+    }
+    // cerr << "returning\n";
+    board->doMove(currMoves[maxIndex], playerSide);
+    return currMoves[maxIndex];
 }
 
 

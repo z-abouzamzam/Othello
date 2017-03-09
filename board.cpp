@@ -41,6 +41,24 @@ void Board::set(Side side, int x, int y) {
     black.set(x + 8*y, side == BLACK);
 }
 
+vector<Move*> Board::getPossibleMoves(Side side)
+{
+    vector<Move*> currMoves;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Move* move = new Move(i, j);
+            if (checkMove(move, side))
+            {
+                currMoves.push_back(move);
+                // std::// cerr << "Hello" << '\n';
+            }
+        }
+    }
+    return currMoves;
+}
+
 bool Board::onBoard(int x, int y) {
     return(0 <= x && x < 8 && 0 <= y && y < 8);
 }
@@ -65,6 +83,55 @@ bool Board::hasMoves(Side side) {
         }
     }
     return false;
+}
+
+int Board::calcCapturedSpaces(Move* m, Side side)
+{
+    // for each valid move calc space between move
+    int X = m->getX();
+    int Y = m->getY();
+
+    // cerr << X << "x " << Y << "y\n";
+    Side other = (side == BLACK) ? WHITE : BLACK;
+
+    int between = 0;
+
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if (dy == 0 && dx == 0) continue;
+
+            // Is there a capture in that direction?
+            int x = X + dx;
+            int y = Y + dy;
+            if (onBoard(x, y) && get(other, x, y)) {
+                do {
+                    x += dx;
+                    y += dy;
+                } while (onBoard(x, y) && get(other, x, y));
+
+                if (onBoard(x, y) && get(side, x, y))
+                {
+                    // add difference - 1 spaces
+                    // cerr << "sdhjf\n";
+                    // if its diagonal or in x direction
+                    if(dx == dy || dy == 0)
+                    {
+                        between += (abs(X - x) - 1);
+                    }
+
+                    // if in y direction
+                    else
+                    {
+                        between += (abs(Y - y) - 1);
+                    }
+                }
+            }
+        }
+        // cerr << "Between = " << between << "\n";
+    }
+
+    return between;
+
 }
 
 /*

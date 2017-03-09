@@ -2,7 +2,10 @@
 #define __BOARD_H__
 
 #include <bitset>
+#include <vector>
+#include <cmath>
 #include "common.hpp"
+#include <iostream>
 using namespace std;
 
 class Board {
@@ -28,6 +31,9 @@ public:
     int count(Side side);
     int countBlack();
     int countWhite();
+
+    int calcCapturedSpaces(Move* m, Side side);
+    vector<Move*> getPossibleMoves(Side side);
 
     void setBoard(char data[]);
 };
