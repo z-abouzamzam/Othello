@@ -10,11 +10,6 @@
  * within 30 seconds.
  */
 
-<<<<<<< HEAD
-int strengths [8][8] = {0};
-=======
->>>>>>> 0263aa748c1c752cd2293d5fad860a8e812d0eb8
-
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
@@ -27,14 +22,14 @@ Player::Player(Side side) {
      */
 
      // set edge values
-    /*for (int i = 0; i<8; i++)
+    for (int i = 0; i<8; i++)
     {
-      for (int j=0; j<8; j++)
-      {
-        strengths[i][j] = 0;
-      }
+        for (int j=0; j<8; j++)
+        {
+            strengths[i][j] = 0;
+        }
     }
-    */
+
     for (int i = 0; i<8; i++)
     {
         strengths[0][i] = 2;
@@ -105,12 +100,23 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
      * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    return doBestCurrentMove(opponentsMove);
+
+    // comment in the function to test
+    // doBestMove calculates move based on amount of spaces it switches over,
+    // and doBetterMove uses weighted edge values to choose the best move
+
+    // both better and best seem to beat simple player consistently
+
+    // a future implementation may combine better and best to form the bestest
+    // move to beat simple player
+
+    // return doBestMove(opponentsMove, msLeft);
+    return doBetterMove(opponentsMove, msLeft);
     // return doSimpleMove(opponentsMove, msLeft);
 }
 
-// determines the best move by just determining how many spaces each move captures
-Move* Player::doBestCurrentMove(Move* opponentsMove)
+// determines the best move by  determining how many spaces each move captures
+Move* Player::doBestMove(Move* opponentsMove, int msLeft)
 {
     board->doMove(opponentsMove, opponentSide);
     vector<Move*> currMoves = board->getPossibleMoves(playerSide);
@@ -130,9 +136,7 @@ Move* Player::doBestCurrentMove(Move* opponentsMove)
     return currMoves[maxIndex];
 }
 
-
-
-// determines the best move by just determining how many spaces each move captures
+// determines the best move by using weighted edge values
 Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
 {
     //if (m == nullptr) return;
@@ -148,7 +152,7 @@ Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
             Move* move = new Move(i, j);
             if (board->checkMove(move, playerSide))
             {
-                //board->doMove(move, playerSide);
+                // board->doMove(move, playerSide);
                 currMoves.push_back(move);
                 if (strengths[i][j]<min){
                     min = strengths[i][j];
@@ -158,11 +162,11 @@ Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
         }
 
     }
-    if (currMoves.size()>0){
+    if (currMoves.size() > 0){
         board->doMove(best, playerSide);
         return best;
     }
-    
+
     return nullptr;
 }
 
