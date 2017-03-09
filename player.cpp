@@ -1,25 +1,47 @@
 #include "player.hpp"
+#include <cstdlib>
+#include <vector>
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
  * within 30 seconds.
  */
+Board *board;
+Side playerSide;
+Side opponentSide;
+
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
 
     /*
-     * TODO: Do any initialization you need to do here (setting up the board,
+     * Do any initialization you need to do here (setting up the board,
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.asa
      */
+
+     // set edge values
+
+     board = new Board();
+     playerSide = side;
+
+    if (playerSide == BLACK){
+        opponentSide = WHITE;
+    }
+    else{
+        opponentSide = BLACK;
+    }
+
+
 }
 
 /*
  * Destructor for the player
  */
-Player::~Player() {
+Player::~Player()
+{
+    delete board;
 }
 
 /*
@@ -35,10 +57,35 @@ Player::~Player() {
  * The move returned must be legal; if there are no valid moves for your side,
  * return nullptr.
  */
-Move *Player::doMove(Move *opponentsMove, int msLeft) {
+Move *Player::doMove(Move *opponentsMove, int msLeft)
+{
     /*
-     * TODO: Implement how moves your AI should play here. You should first
+     * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+
+    return doSimpleMove(opponentsMove, msLeft);
+}
+
+Move *Player::doSimpleMove(Move* opponentsMove, int msLeft)
+{
+    // vector<Move*> validMoves;
+    board->doMove(opponentsMove, opponentSide);
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Move* move = new Move(i, j);
+            if (board->checkMove(move, playerSide))
+            {
+                board->doMove(move, playerSide);
+                return move;
+            }
+        }
+
+    }
+
+    // we now juoves(0);st choose a random valid move
+    //  if board.hasMov[])is.splayerSide
     return nullptr;
 }
