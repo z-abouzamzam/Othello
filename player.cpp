@@ -7,9 +7,7 @@
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
  * within 30 seconds.
  */
-Board *board;
-Side playerSide;
-Side opponentSide;
+
 
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
@@ -22,14 +20,50 @@ Player::Player(Side side) {
      */
 
      // set edge values
+    // for (int i = 0; i<8; i++)
+    // {
+    //   for (int j=0; j<8; j++)
+    //   {
+    //     strengths[i][j] = 0;
+    //   }
+    // }
+    // for (int i = 0; i<8; i++)
+    // {
+    //     strengths[0][i] = 2;
+    //     strengths[7][i] = 2;
+    //     strengths[i][0] = 2;
+    //     strengths[i][7] = 2;
+    // }
+    //
+    // strengths[0][0] = 5;
+    // strengths[7][0] = 5;
+    // strengths[0][7] = 5;
+    // strengths[7][7] = 5;
+    //
+    // strengths[1][1] = -5;
+    // strengths[1][6] = -5;
+    // strengths[6][1] = -5;
+    // strengths[6][6] = -5;
+    //
+    // strengths[0][1] = -2;
+    // strengths[0][6] = -2;
+    // strengths[1][0] = -2;
+    // strengths[1][7] = -2;
+    // strengths[6][0] = -2;
+    // strengths[6][7] = -2;
+    // strengths[7][1] = -2;
+    // strengths[7][6] = -2;
 
-     board = new Board();
-     playerSide = side;
 
-    if (playerSide == BLACK){
+    board = new Board();
+    playerSide = side;
+
+    if (playerSide == BLACK)
+    {
         opponentSide = WHITE;
     }
-    else{
+    else
+    {
         opponentSide = BLACK;
     }
 
@@ -63,8 +97,29 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
      * Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
+    return doBestCurrentMove(opponentsMove);
+    // return doSimpleMove(opponentsMove, msLeft);
+}
 
-    return doSimpleMove(opponentsMove, msLeft);
+// determines the best move by just determining how many spaces each move captures
+Move* Player::doBestCurrentMove(Move* opponentsMove)
+{
+    board->doMove(opponentsMove, opponentSide);
+    vector<Move*> currMoves = board->getPossibleMoves(playerSide);
+    // cerr << board->hasMoves(playerSide) << "\n";
+    // cerr << "got current moves \n" << currMoves.size();
+    int maxIndex = 0, max = 0;
+    for(int i = 0; i < currMoves.size(); i++)
+    {
+        // cerr << "calcing spaces \n";
+        if(max >= board->calcCapturedSpaces(currMoves[i], playerSide))
+        {
+            maxIndex = i;
+        }
+    }
+    // cerr << "returning\n";
+    board->doMove(currMoves[maxIndex], playerSide);
+    return currMoves[maxIndex];
 }
 
 Move *Player::doSimpleMove(Move* opponentsMove, int msLeft)
