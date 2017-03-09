@@ -1,4 +1,6 @@
+
 #include "player.hpp"
+//#include <board.hpp>
 #include <cstdlib>
 #include <vector>
 
@@ -7,13 +9,13 @@
  * on (BLACK or WHITE) is passed in as "side". The constructor must finish
  * within 30 seconds.
  */
-Board *board;
-Side playerSide;
-Side opponentSide;
+
+int strengths [8][8] = {0};
 
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
+    std::cout<<"side: "<<side;
 
     /*
      * Do any initialization you need to do here (setting up the board,
@@ -22,14 +24,51 @@ Player::Player(Side side) {
      */
 
      // set edge values
+    /*for (int i = 0; i<8; i++)
+    {
+      for (int j=0; j<8; j++)
+      {
+        strengths[i][j] = 0;
+      }
+    }
+    */
+    for (int i = 0; i<8; i++)
+    {
+        strengths[0][i] = 2;
+        strengths[7][i] = 2;
+        strengths[i][0] = 2;
+        strengths[i][7] = 2;
+    }
 
-     board = new Board();
-     playerSide = side;
+    strengths[0][0] = 5;
+    strengths[7][0] = 5;
+    strengths[0][7] = 5;
+    strengths[7][7] = 5;
 
-    if (playerSide == BLACK){
+    strengths[1][1] = -5;
+    strengths[1][6] = -5;
+    strengths[6][1] = -5;
+    strengths[6][6] = -5;
+
+    strengths[0][1] = -2;
+    strengths[0][6] = -2;
+    strengths[1][0] = -2;
+    strengths[1][7] = -2;
+    strengths[6][0] = -2;
+    strengths[6][7] = -2;
+    strengths[7][1] = -2;
+    strengths[7][6] = -2;
+
+
+    board = new Board();
+    playerSide = side;
+
+    if (playerSide == BLACK)
+    {
         opponentSide = WHITE;
     }
-    else{
+    else
+    {
         opponentSide = BLACK;
     }
 
@@ -66,6 +105,43 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
 
     return doSimpleMove(opponentsMove, msLeft);
 }
+
+
+
+// determines the best move by just determining how many spaces each move captures
+Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
+{
+    //if (m == nullptr) return;
+    board->doMove(opponentsMove, opponentSide);
+    vector<Move*> currMoves;
+    Move *best;
+    int min = 50;
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            Move* move = new Move(i, j);
+            if (board->checkMove(move, playerSide))
+            {
+                //board->doMove(move, playerSide);
+                currMoves.push_back(move);
+                if (strengths[i][j]<min){
+                    min = strengths[i][j];
+                    best = move;
+                }
+            }
+        }
+
+    }
+    if (currMoves.size()>0){
+        board->doMove(best, playerSide);
+        return best;
+    }
+    
+    return nullptr;
+}
+
 
 Move *Player::doSimpleMove(Move* opponentsMove, int msLeft)
 {
