@@ -13,7 +13,7 @@
 Player::Player(Side side) {
     // Will be set to true in test_minimax.cpp.
     testingMinimax = false;
-    std::cout<<"side: "<<side;
+    // std::cout<<"side: "<<side;
 
     /*
      * Do any initialization you need to do here (setting up the board,
@@ -64,11 +64,14 @@ Player::Player(Side side) {
     if (playerSide == BLACK)
     {
         opponentSide = WHITE;
+        std::cerr<<"playerside = Black\n";
     }
     else
     {
         opponentSide = BLACK;
+        std::cerr<<"playerside = White\n";
     }
+    //std::cerr<<"playerside = "<<playerSide;
 
 
 }
@@ -110,10 +113,22 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
     // a future implementation may combine better and best to form the bestest
     // move to beat simple player
 
-    // return doBestMove(opponentsMove, msLeft);
-    return doBetterMove(opponentsMove, msLeft);
+    return doBestMove(opponentsMove, msLeft);
+    //return doBetterMove(opponentsMove, msLeft);
     // return doSimpleMove(opponentsMove, msLeft);
 }
+
+
+Move* Player::doMinimaxMove(Move* opponentsMove, int depth, int maxDepth)
+{
+    board->doMove(opponentsMove, opponentSide);
+    vector<Move*> currMoves = board->getPossibleMoves(playerSide);
+
+
+}
+
+
+
 
 // determines the best move by  determining how many spaces each move captures
 Move* Player::doBestMove(Move* opponentsMove, int msLeft)
@@ -143,7 +158,7 @@ Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
     board->doMove(opponentsMove, opponentSide);
     vector<Move*> currMoves;
     Move *best;
-    int min = 50;
+    int max = -50;
 
     for (int i = 0; i < 8; i++)
     {
@@ -154,9 +169,9 @@ Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
             {
                 // board->doMove(move, playerSide);
                 currMoves.push_back(move);
-                if (strengths[i][j]<min){
-                    min = strengths[i][j];
-                    best = move;
+                if (strengths[i][j]>max){
+                    max = strengths[i][j];
+                    best = max;
                 }
             }
         }
