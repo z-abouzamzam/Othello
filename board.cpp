@@ -52,12 +52,82 @@ vector<Move*> Board::getPossibleMoves(Side side)
             if (checkMove(move, side))
             {
                 currMoves.push_back(move);
+                //std::cerr << "Hello" << '\n';
+            }
+        }
+    }
+    //std::cerr << "I am finding moves : " << currMoves.size() << std::endl;
+    return currMoves;
+}
+
+
+int Board::getWeightedScore(Side side)
+{
+    //int m_strengths[8][8];
+    //m_strengths[0]={10, -5, 6, 5, 5, 6, -5, 10};
+    //m_strengths[1]={-5, -10, 0, 0, 0, 0, -10, -5};
+    //m_strengths[2]={6, 0, 0, 0, 0, 0, 0, 6};
+    //m_strengths[3]={5, 0, 0, 0, 0, 0, 0, 5};
+    //m_strengths[4]={5, 0, 0, 0, 0, 0, 0, 5};
+    //m_strengths[5]={6, 0, 0, 0, 0, 0, 0, 6};
+    //m_strengths[6]={-5, -10, 0, 0, 0, 0, -10, -5};
+    //m_strengths[7]={10, -5, 6, 5, 5, 6, -5, 10};
+
+    int strengths[8][8];
+    for (int i = 0; i<8; i++)
+    {
+        for (int j=0; j<8; j++)
+        {
+            strengths[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i<8; i++)
+    {
+        strengths[0][i] = 2;
+        strengths[7][i] = 2;
+        strengths[i][0] = 2;
+        strengths[i][7] = 2;
+    }
+
+    strengths[0][0] = 5;
+    strengths[7][0] = 5;
+    strengths[0][7] = 5;
+    strengths[7][7] = 5;
+
+    strengths[1][1] = -5;
+    strengths[1][6] = -5;
+    strengths[6][1] = -5;
+    strengths[6][6] = -5;
+
+    strengths[0][1] = -2;
+    strengths[0][6] = -2;
+    strengths[1][0] = -2;
+    strengths[1][7] = -2;
+    strengths[6][0] = -2;
+    strengths[6][7] = -2;
+    strengths[7][1] = -2;
+    strengths[7][6] = -2;
+
+    int score=0;
+    vector<Move*> currMoves;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            //Move* move = new Move(i, j);
+            if (occupied(i, j))
+            {
+                if (get(side, i, j)){
+                    score += strengths[i][j];
+                }
                 // std::// cerr << "Hello" << '\n';
             }
         }
     }
-    return currMoves;
+    return score;
 }
+
 
 bool Board::onBoard(int x, int y) {
     return(0 <= x && x < 8 && 0 <= y && y < 8);

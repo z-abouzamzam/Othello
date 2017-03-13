@@ -113,24 +113,90 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
     // a future implementation may combine better and best to form the bestest
     // move to beat simple player
 
-    return doBestMove(opponentsMove, msLeft);
+    //int M_score;
+    //Move *M_move;
+    //return doBestMove(opponentsMove, msLeft);
+    int score;
+    int maximumScore=-100;
+    Move* nextmove = nullptr;
+    if (opponentsMove != nullptr){
+        //std::cerr << "doing opp move : " << opponentsMove->x << " " << opponentsMove->y << std::endl;
+        board->doMove(opponentsMove, opponentSide);
+    }
+    vector<Move*> currMoves = board->getPossibleMoves(playerSide);
+    for (int i = 0; i<currMoves.size(); i++){
+        //std::cerr << "on loop iter" << std::endl;
+        Board *newOne = board->copy();
+        score = doMinimaxMove(currMoves[i], newOne, 1, 4, opponentSide);
+        if (score>maximumScore){
+            maximumScore = score;
+            nextmove = currMoves[i];
+            std::cerr << "current maximum score: " << maximumScore << std::endl;
+            std::cerr << "current best move: " << nextmove->x << " " << nextmove->y << std::endl;
+        }
+        else {
+            std::cerr << "rejected move: " << currMoves[i]->x << " " << currMoves[i]->y << std::endl;
+            std::cerr << "rejected score: " << score << std::endl;
+        }
+
+    }
+    if (nextmove != nullptr){
+        //std::cerr << "trying to do a move: " <<nextmove->x << " " << nextmove->y << std::endl;
+        board -> doMove(nextmove, playerSide);
+    }
+    return nextmove;
+    //(M_score, M_move)=doMinimaxMove(opponentsMove, board, 0, 4);
+    //return M_move;
     //return doBetterMove(opponentsMove, msLeft);
     // return doSimpleMove(opponentsMove, msLeft);
 }
 
-
-Move* Player::doMinimaxMove(Move* opponentsMove, int depth, int maxDepth)
+int Player::doMinimaxMove(Move* opponentsMove, Board *board, int depth, int maxDepth, Side mySide)
 {
-    board->doMove(opponentsMove, opponentSide);
-    vector<Move*> currMoves = board->getPossibleMoves(playerSide);
+    //std::cerr << "depth = " << depth << std::endl;
+    int score;
+    Move* bestmove = nullptr;
+    int nextscore;
+    //Move* nextmove = nullptr;
+    int minScore = 500;
+    if (mySide == playerSide){
+        board->doMove(opponentsMove, opponentSide);
+    }
+    else{
+        board->doMove(opponentsMove, playerSide);
+    }
+    vector<Move*> currMoves = board->getPossibleMoves(mySide);
+    
 
+    if (depth == maxDepth){
+        score = board->getWeightedScore(playerSide);
+    }
+    else if (currMoves.size()==0){
+        score = board->getWeightedScore(playerSide);
+    }
+    else{
+        for (unsigned int i =0; i<currMoves.size(); i++){
+            
+            Board *newBoard = board->copy();
+            //board->doMove(currMoves[i], playerSide);
+            if (mySide = playerSide){
+                nextscore = doMinimaxMove(currMoves[i], newBoard, depth+1, maxDepth, opponentSide);
+            }
+            else{
+                nextscore = doMinimaxMove(currMoves[i], newBoard, depth+1, maxDepth, playerSide);
+            }
+            if (nextscore<minScore){
+                minScore = nextscore;
+                //bestmove = nextmove;
+            }
 
+        }
+        score = minScore;
+    }
+    return score;
 }
 
-
-
-
-// determines the best move by  determining how many spaces each move captures
+//determines the best move by  determining how many spaces each move captures
 Move* Player::doBestMove(Move* opponentsMove, int msLeft)
 {
     board->doMove(opponentsMove, opponentSide);
@@ -171,7 +237,7 @@ Move *Player::doBetterMove(Move* opponentsMove, int msLeft)
                 currMoves.push_back(move);
                 if (strengths[i][j]>max){
                     max = strengths[i][j];
-                    best = max;
+                    best = move;
                 }
             }
         }
