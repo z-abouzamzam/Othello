@@ -1,4 +1,8 @@
 #include "board.hpp"
+//#include <algorithm>
+#include <cstdlib>
+//#include <ctime>
+
 
 /*
  * Make a standard 8x8 othello board and initialize it to the standard setup.
@@ -10,6 +14,7 @@ Board::Board() {
     taken.set(4 + 8 * 4);
     black.set(4 + 8 * 3);
     black.set(3 + 8 * 4);
+    //std::srand ( unsigned ( std::time(0) ) );
 }
 
 /*
@@ -57,6 +62,7 @@ vector<Move*> Board::getPossibleMoves(Side side)
         }
     }
     //std::cerr << "I am finding moves : " << currMoves.size() << std::endl;
+    //std::random_shuffle ( currMoves.begin(), currMoves.end() );
     return currMoves;
 }
 

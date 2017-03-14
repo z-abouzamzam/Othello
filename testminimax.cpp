@@ -37,15 +37,15 @@ int main(int argc, char *argv[]) {
     Move *move = player->doMove(nullptr, 0);
 
     if (move != nullptr && move->x == 1 && move->y == 1) {
-        std::cout << "Correct move: (1, 1)" << std::endl;;
+        //std::cout << "Correct move: (1, 1)" << std::endl;;
     } else {
-        std::cout << "Wrong move: got ";
+        //std::cout << "Wrong move: got ";
         if (move == nullptr) {
-            std::cout << "PASS";
+            // std::cout << "PASS";
         } else {
-            std::cout << "(" << move->x << ", " << move->y << ")";
+            //std::cout << "(" << move->x << ", " << move->y << ")";
         }
-        std::cout << ", expected (1, 1)" << std::endl;
+        //std::cout << ", expected (1, 1)" << std::endl;
     }
 
     return 0;

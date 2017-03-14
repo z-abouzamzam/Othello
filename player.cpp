@@ -131,12 +131,12 @@ Move *Player::doMove(Move *opponentsMove, int msLeft)
         if (score>maximumScore){
             maximumScore = score;
             nextmove = currMoves[i];
-            std::cerr << "current maximum score: " << maximumScore << std::endl;
-            std::cerr << "current best move: " << nextmove->x << " " << nextmove->y << std::endl;
+            //std::cerr << "current maximum score: " << maximumScore << std::endl;
+            //std::cerr << "current best move: " << nextmove->x << " " << nextmove->y << std::endl;
         }
         else {
-            std::cerr << "rejected move: " << currMoves[i]->x << " " << currMoves[i]->y << std::endl;
-            std::cerr << "rejected score: " << score << std::endl;
+            //std::cerr << "rejected move: " << currMoves[i]->x << " " << currMoves[i]->y << std::endl;
+            //std::cerr << "rejected score: " << score << std::endl;
         }
 
     }
@@ -179,7 +179,7 @@ int Player::doMinimaxMove(Move* opponentsMove, Board *board, int depth, int maxD
             
             Board *newBoard = board->copy();
             //board->doMove(currMoves[i], playerSide);
-            if (mySide = playerSide){
+            if (mySide == playerSide){
                 nextscore = doMinimaxMove(currMoves[i], newBoard, depth+1, maxDepth, opponentSide);
             }
             else{
