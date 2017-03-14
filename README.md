@@ -1,5 +1,7 @@
-README.md
+**Othello**
+=
+The classic game of Othello, written in C++ and Java.
 
-This is Othello.
 
-Player AI by Zafir Abou-Zamzam and Michelle Zhao.
+> AI created by Zafir Abou-Zamzam and Michelle Zhao.
+> See README.txt for assignment descriptions.

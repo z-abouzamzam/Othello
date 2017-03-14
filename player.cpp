@@ -64,12 +64,12 @@ Player::Player(Side side) {
     if (playerSide == BLACK)
     {
         opponentSide = WHITE;
-        std::cerr<<"playerside = Black\n";
+        std::cerr << "playerside = Black\n";
     }
     else
     {
         opponentSide = BLACK;
-        std::cerr<<"playerside = White\n";
+        std::cerr << "playerside = White\n";
     }
     //std::cerr<<"playerside = "<<playerSide;
 
@@ -166,7 +166,7 @@ int Player::doMinimaxMove(Move* opponentsMove, Board *board, int depth, int maxD
         board->doMove(opponentsMove, playerSide);
     }
     vector<Move*> currMoves = board->getPossibleMoves(mySide);
-    
+
 
     if (depth == maxDepth){
         score = board->getWeightedScore(playerSide);
@@ -176,7 +176,7 @@ int Player::doMinimaxMove(Move* opponentsMove, Board *board, int depth, int maxD
     }
     else{
         for (unsigned int i =0; i<currMoves.size(); i++){
-            
+
             Board *newBoard = board->copy();
             //board->doMove(currMoves[i], playerSide);
             if (mySide == playerSide){
